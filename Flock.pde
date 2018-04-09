@@ -25,5 +25,8 @@ void mousePressed() {
         case 't':
             elements.add(new Target(elements.count(), mouseX, mouseY));
             break;
+        case 'o':
+            elements.add(new Obstacle(elements.count(), mouseX, mouseY, 30));
+            break;
     }
 }

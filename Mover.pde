@@ -3,6 +3,11 @@ public abstract class Mover extends Element {
     protected final float MAX_SPEED;
     protected final float MAX_FORCE;
     
+    protected final int FEELERS_NUM = 3; // ODD VALUE SUGGESTED
+    protected final int FEELERS_LENGTH = 10;
+    protected final float FEELERS_ANGLE = HALF_PI;
+    protected PVector[] feelers;
+    
     protected PVector velocity = new PVector();
     protected PVector acceleration = new PVector();
     
@@ -26,6 +31,7 @@ public abstract class Mover extends Element {
     public void update(Facade<Element> elements) {
         decideSteering(elements);
         PVector force = steering.interact(this, objectives);
+        updateFeelers();
         for(Element e : elements) {
             force.add(e.interact(this));
         }
@@ -54,6 +60,22 @@ public abstract class Mover extends Element {
         else if(position.x < 0) position.x = width;
         if(position.y > height) position.y = 0;
         else if(position.y < 0) position.y = height;
+    }
+    
+    
+    protected void updateFeelers() {
+        feelers = new PVector[FEELERS_NUM];
+        float angle = -FEELERS_ANGLE / 2;
+        float dAngle = FEELERS_ANGLE / (FEELERS_NUM - 1);
+        for(int i = 0; i < FEELERS_NUM; i++) {
+            feelers[i] = PVector.mult(velocity, FEELERS_LENGTH).rotate(angle);
+            angle += dAngle;
+        }
+    }
+    
+    
+    protected PVector[] getFeelers() {
+        return feelers;
     }
     
     public abstract void decideSteering(Facade<Element> elements);
