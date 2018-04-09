@@ -97,7 +97,7 @@ public class Prey extends Mover {
         if(objectives.count() > 0) steering = Steering.FLEE;
         else {
             objectives = elements.filter(Filters.closeInstance(Target.class, Steering.SEEK_DISTANCE, position));
-            if(objectives.count() > 0) steering = Steering.SEEK;
+            if(objectives.count() > 0) steering = Steering.ARRIVE;
         }
     }
 

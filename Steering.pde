@@ -44,12 +44,37 @@ public enum Steering {
             }
             return force;
         }
+    },
+    
+    ARRIVE() {
+        @Override
+        public PVector interact(Mover mover, Facade<Element> targets) {
+            // Select closer target
+            Element target = null;
+            float minD = SEEK_DISTANCE;
+            for(Element t : targets) {
+                float d = mover.getPosition().dist(t.getPosition()); 
+                if(d < minD) {
+                    target = t;
+                    minD = d;
+                }
+            }
+            
+            if(target != null) {
+                PVector desired = PVector.sub(target.getPosition(), mover.getPosition());
+                float d = desired.mag();
+                if(d < ARRIVE_DISTANCE) desired.setMag(map(d, 0, 50, 0, mover.MAX_SPEED));
+                else desired.setMag(mover.MAX_SPEED);
+                return PVector.sub(desired, mover.getVelocity());
+            } else return new PVector();
+        }
     };
     
     /* STEERING PARAMETERS */
     final static int WANDER_RADIUS = 3;
     final static int WANDER_DISTANCE = 20;
     final static int SEEK_DISTANCE = 200;
+    final static int ARRIVE_DISTANCE = 50;
     final static int FLEE_DISTANCE = 100;
     
     public abstract PVector interact(Mover self, Facade<Element> objectives);
