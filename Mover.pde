@@ -61,18 +61,17 @@ public abstract class Mover extends Element {
 }
 
 
-public class Vehicle extends Mover {
+public class Prey extends Mover {
     
     private final PShape ASPECT;
 
-    public Vehicle(int id, int x, int y, int radius, float maxSpeed, float maxForce) {
+    public Prey(int id, int x, int y, int radius, float maxSpeed, float maxForce) {
         super(id, x, y, radius, radius, maxSpeed, maxForce);
-        
         ASPECT = createShape();
         ASPECT.beginShape();
-        ASPECT.vertex(0, -R);
-        ASPECT.vertex(-R/2, R);
-        ASPECT.vertex(R/2, R);
+            ASPECT.vertex(0, -R);
+            ASPECT.vertex(-R/2, R);
+            ASPECT.vertex(R/2, R);
         ASPECT.endShape(CLOSE);
         ASPECT.setFill(#00FF00);
         ASPECT.setStroke(false);
@@ -94,8 +93,57 @@ public class Vehicle extends Mover {
     @Override
     public void decideSteering(Facade<Element> elements) {
         steering = Steering.WANDER;
-        objectives = elements.filter(Filters.closeInstance(Target.class, Steering.SEEK_DISTANCE, position));
+        objectives = elements.filter(Filters.closeInstance(Predator.class, Steering.FLEE_DISTANCE, position));
+        if(objectives.count() > 0) steering = Steering.FLEE;
+        else {
+            objectives = elements.filter(Filters.closeInstance(Target.class, Steering.SEEK_DISTANCE, position));
+            if(objectives.count() > 0) steering = Steering.SEEK;
+        }
+    }
+
+}
+
+
+public class Predator extends Mover {
+    
+    private final PShape ASPECT;
+
+    public Predator(int id, int x, int y, int radius, float maxSpeed, float maxForce) {
+        super(id, x, y, radius, radius, maxSpeed, maxForce);
+        ASPECT = createShape();
+        ASPECT.beginShape();
+            ASPECT.vertex(0, -R);
+            ASPECT.vertex(-R/2, R);
+            ASPECT.vertex(R/2, R);
+        ASPECT.endShape(CLOSE);
+        ASPECT.setFill(#FF0000);
+        ASPECT.setStroke(false);
+    }
+
+
+    public void decideSteering(Facade<Element> elements) {
+        objectives = elements.filter(Filters.closeInstance(Prey.class, Steering.SEEK_DISTANCE, position));
         if(objectives.count() > 0) steering = Steering.SEEK;
+        else steering = Steering.WANDER;
+    }
+
+    
+    @Override
+    public PVector interact(Element e) {
+        if(e instanceof Prey && position.dist(e.getPosition()) <= R + e.R) e.suicide = true; // Kill prey
+        return super.interact(e);
+    }
+    
+
+    @Override
+    public void draw() {
+        float dir = velocity.heading() + HALF_PI;
+        fill(#FF0000); noStroke();
+        pushMatrix();
+            translate(position.x, position.y);
+            rotate(dir);
+            shape(ASPECT);
+        popMatrix();
     }
 
 }

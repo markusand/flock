@@ -17,7 +17,10 @@ void draw() {
 void mousePressed() {
     switch(key) {
         case 'v':
-            elements.add(new Vehicle(elements.count(), mouseX, mouseY, 6, 2, 1));
+            elements.add(new Prey(elements.count(), mouseX, mouseY, 6, 2, 1));
+            break;
+        case 'p':
+            elements.add(new Predator(elements.count(), mouseX, mouseY, 9, 3, 1));
             break;
         case 't':
             elements.add(new Target(elements.count(), mouseX, mouseY));
