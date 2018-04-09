@@ -8,9 +8,11 @@ void setup() {
 
 void draw() {
     background(0);
-    for(Element m : elements) {
-        m.update(elements);
-        m.draw();
+    for(Iterator i = elements.iterator(); i.hasNext();) {
+        Element e = (Element) i.next();
+        e.update(elements);
+        e.draw();
+        if(e.suicide) i.remove();
     }
 }
 
