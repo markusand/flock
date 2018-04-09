@@ -1,4 +1,4 @@
-ArrayList<Mover> movers = new ArrayList();
+Facade<Mover> movers = new Facade();
 
 
 void setup() {
@@ -15,5 +15,5 @@ void draw() {
 
 
 void mousePressed() {
-    movers.add(new Mover(movers.size(), mouseX, mouseY, 3, (int)random(4, 10), 2, 0.1));
+    movers.add(new Mover(movers.count(), mouseX, mouseY, 3, (int)random(4, 10), 2, 0.1));
 }
