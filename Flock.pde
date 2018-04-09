@@ -3,6 +3,7 @@ Facade<Element> elements = new Facade();
 
 void setup() {
     size(700, 700, P2D);
+    elements.add( new Wall(0, new PVector(30,10), new PVector(width-30, 10), new PVector(width-10, 30), new PVector(width-10, height-30), new PVector(width-30, height-10), new PVector(30, height-10), new PVector(10, height-30), new PVector(10, 30), new PVector(30, 10)));
 }
 
 void draw() {

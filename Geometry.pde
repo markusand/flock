@@ -23,5 +23,14 @@ public static class Geometry {
             return new PVector[0];
         }
     }
+    
+    public static PVector linesIntersection(PVector line1Origin, PVector line1End, PVector line2Origin, PVector line2End) {
+        float uA = ((line2End.x-line2Origin.x)*(line1Origin.y-line2Origin.y) - (line2End.y-line2Origin.y)*(line1Origin.x-line2Origin.x)) / ((line2End.y-line2Origin.y)*(line1End.x-line1Origin.x) - (line2End.x-line2Origin.x)*(line1End.y-line1Origin.y));
+        float uB = ((line1End.x-line1Origin.x)*(line1Origin.y-line2Origin.y) - (line1End.y-line1Origin.y)*(line1Origin.x-line2Origin.x)) / ((line2End.y-line2Origin.y)*(line1End.x-line1Origin.x) - (line2End.x-line2Origin.x)*(line1End.y-line1Origin.y));
+        if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+            return new PVector(line1Origin.x + (uA * (line1End.x-line1Origin.x)), line1Origin.y + (uA * (line1End.y-line1Origin.y)));
+        }
+        return null;
+    }
 
 }
