@@ -23,4 +23,6 @@ public abstract class Element {
         point(position.x, position.y);
     }
     
+    public abstract void update(Facade<Element> elements);
+    public abstract PVector interact(Element e);
 }

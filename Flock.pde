@@ -1,4 +1,4 @@
-Facade<Mover> movers = new Facade();
+Facade<Element> elements = new Facade();
 
 
 void setup() {
@@ -7,13 +7,13 @@ void setup() {
 
 void draw() {
     background(255);
-    for(Mover m : movers) {
-        m.update();
+    for(Element m : elements) {
+        m.update(elements);
         m.draw();
     }
 }
 
 
 void mousePressed() {
-    movers.add(new Mover(movers.count(), mouseX, mouseY, 3, (int)random(4, 10), 2, 0.1));
+    elements.add(new Vehicle(elements.count(), mouseX, mouseY, 6, 2, 1));
 }

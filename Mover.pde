@@ -1,4 +1,4 @@
-public class Mover extends Element {
+public abstract class Mover extends Element {
     
     protected final float MAX_SPEED;
     protected final float MAX_FORCE;
@@ -15,13 +15,29 @@ public class Mover extends Element {
         steering = Steering.WANDER;
     }
     
+    
     public PVector getVelocity() {
         return velocity;
     }
     
-    public void update() {
+    
+    @Override
+    public void update(Facade<Element> elements) {
         PVector force = steering.interact(this);
+        for(Element e : elements) {
+            force.add(e.interact(this));
+        }
         applyForce(force);
+    }
+    
+    
+    @Override
+    public PVector interact(Element e) {
+        PVector union = PVector.sub(e.getPosition(), position);
+        float d = union.mag();
+        float minD = R + e.R;
+        if(d < minD) return union.setMag(minD - d);
+        return new PVector();
     }
     
     
@@ -37,10 +53,37 @@ public class Mover extends Element {
         if(position.y > height) position.y = 0;
         else if(position.y < 0) position.y = height;
     }
+
+}
+
+
+public class Vehicle extends Mover {
     
+    private final PShape ASPECT;
+
+    public Vehicle(int id, int x, int y, int radius, float maxSpeed, float maxForce) {
+        super(id, x, y, radius, radius, maxSpeed, maxForce);
+        
+        ASPECT = createShape();
+        ASPECT.beginShape();
+        ASPECT.vertex(0, -R);
+        ASPECT.vertex(-R/2, R);
+        ASPECT.vertex(R/2, R);
+        ASPECT.endShape(CLOSE);
+        ASPECT.setFill(#00FF00);
+        ASPECT.setStroke(false);
+    }
+
+    
+    @Override
     public void draw() {
-        fill(0);
-        ellipse(position.x, position.y, 2*R, 2*R);
+        float dir = velocity.heading() + HALF_PI;
+        fill(#FF0000); noStroke();
+        pushMatrix();
+            translate(position.x, position.y);
+            rotate(dir);
+            shape(ASPECT);
+        popMatrix();
     }
 
 }
