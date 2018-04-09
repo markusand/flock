@@ -7,7 +7,7 @@ void setup() {
 }
 
 void draw() {
-    background(255);
+    background(0);
     for(Element m : elements) {
         m.update(elements);
         m.draw();
@@ -28,6 +28,9 @@ void mousePressed() {
             break;
         case 'o':
             elements.add(new Obstacle(elements.count(), mouseX, mouseY, 30));
+            break;
+        case 'a':
+            elements.add(new Attractor(elements.count(), mouseX, mouseY, (int)random(10, 50)));
             break;
     }
 }
