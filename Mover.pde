@@ -6,17 +6,21 @@ public class Mover extends Element {
     protected PVector velocity = new PVector();
     protected PVector acceleration = new PVector();
     
-    protected PVector[] feelers;
+    protected Steering steering;
     
     public Mover(int id, int x, int y, int mass, int R, float maxSpeed, float maxForce) {
         super(id, x, y, mass, R);
         MAX_SPEED = maxSpeed;
         MAX_FORCE = maxForce;
+        steering = Steering.WANDER;
     }
     
+    public PVector getVelocity() {
+        return velocity;
+    }
     
     public void update() {
-        PVector force = new PVector(0,1);
+        PVector force = steering.interact(this);
         applyForce(force);
     }
     
