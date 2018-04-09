@@ -6,6 +6,7 @@ public abstract class Mover extends Element {
     protected PVector velocity = new PVector();
     protected PVector acceleration = new PVector();
     
+    protected Facade<Element> objectives = new Facade();
     protected Steering steering;
     
     public Mover(int id, int x, int y, int mass, int R, float maxSpeed, float maxForce) {
@@ -23,7 +24,8 @@ public abstract class Mover extends Element {
     
     @Override
     public void update(Facade<Element> elements) {
-        PVector force = steering.interact(this);
+        decideSteering(elements);
+        PVector force = steering.interact(this, objectives);
         for(Element e : elements) {
             force.add(e.interact(this));
         }
@@ -53,6 +55,8 @@ public abstract class Mover extends Element {
         if(position.y > height) position.y = 0;
         else if(position.y < 0) position.y = height;
     }
+    
+    public abstract void decideSteering(Facade<Element> elements);
 
 }
 
@@ -84,6 +88,14 @@ public class Vehicle extends Mover {
             rotate(dir);
             shape(ASPECT);
         popMatrix();
+    }
+    
+    
+    @Override
+    public void decideSteering(Facade<Element> elements) {
+        steering = Steering.WANDER;
+        objectives = elements.filter(Filters.closeInstance(Target.class, Steering.SEEK_DISTANCE, position));
+        if(objectives.count() > 0) steering = Steering.SEEK;
     }
 
 }

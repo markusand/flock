@@ -15,5 +15,12 @@ void draw() {
 
 
 void mousePressed() {
-    elements.add(new Vehicle(elements.count(), mouseX, mouseY, 6, 2, 1));
+    switch(key) {
+        case 'v':
+            elements.add(new Vehicle(elements.count(), mouseX, mouseY, 6, 2, 1));
+            break;
+        case 't':
+            elements.add(new Target(elements.count(), mouseX, mouseY));
+            break;
+    }
 }
